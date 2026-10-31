@@ -19,6 +19,7 @@ class PrepareTests(unittest.TestCase):
         self.source = Path(self.temp.name) / "source"
         self.source.mkdir()
         self.git("init", "-q")
+        self.git("config", "core.autocrlf", "false")
         self.file = self.source / "name.txt"
         self.file.write_text("Azahar\n")
         self.git("add", ".")
@@ -47,6 +48,12 @@ class PrepareTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "other local changes"):
             prepare.apply_branding(self.source)
         self.assertEqual(self.file.read_text(), "User changes\n")
+
+    def test_windows_patch_line_endings(self):
+        self.patch.write_bytes(self.patch.read_bytes().replace(b"\n", b"\r\n"))
+        prepare.apply_branding(self.source)
+        prepare.apply_branding(self.source)
+        self.assertEqual(self.file.read_bytes(), b"Denimulator3\n")
 
     def test_wrong_revision_rejected(self):
         with patch.object(prepare, "COMMIT", "0" * 40):

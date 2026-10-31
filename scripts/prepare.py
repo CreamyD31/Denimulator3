@@ -9,29 +9,34 @@ COMMIT = "01dc2bb7769befd791006ee83d3cc014cb1db3bd"  # Azahar 2123.3
 PATCH = ROOT / "patches" / "denimulator3.patch"
 
 
-def git(source, *args, capture=False):
+def git(source, *args, capture=False, input_data=None):
     return subprocess.run(["git", "-C", str(source), *args], check=True,
-                          stdout=subprocess.PIPE if capture else None).stdout
+                          stdout=subprocess.PIPE if capture else None,
+                          input=input_data).stdout
 
 
 def apply_branding(source):
     head = git(source, "rev-parse", "HEAD", capture=True).decode().strip()
     if head != COMMIT:
         raise RuntimeError(f"Unexpected upstream HEAD: {head}; expected {COMMIT}")
+    # A Windows checkout may convert the patch itself to CRLF. Feed canonical
+    # bytes to Git instead of relying on the host's checkout configuration.
+    patch_bytes = PATCH.read_bytes().replace(b"\r\n", b"\n")
     diff = git(source, "diff", "HEAD", "--binary", capture=True)
     if diff:
-        if diff != PATCH.read_bytes():
+        if diff != patch_bytes:
             raise RuntimeError("Upstream has other local changes; refusing to overwrite them")
         print("Denimulator3 patch already applied", flush=True)
         return
-    git(source, "apply", "--check", str(PATCH))
-    git(source, "apply", str(PATCH))
+    git(source, "apply", "--check", "-", input_data=patch_bytes)
+    git(source, "apply", "-", input_data=patch_bytes)
 
 
 def prepare(source, submodules=True):
     if not source.exists():
         source.mkdir(parents=True)
         git(source, "init")
+        git(source, "config", "core.autocrlf", "false")
         git(source, "remote", "add", "origin", UPSTREAM)
         git(source, "fetch", "--depth", "1", "origin", COMMIT)
         git(source, "checkout", "--detach", "FETCH_HEAD")
