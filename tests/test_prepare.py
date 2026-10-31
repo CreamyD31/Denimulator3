@@ -21,12 +21,14 @@ class PrepareTests(unittest.TestCase):
         self.git("init", "-q")
         self.git("config", "core.autocrlf", "false")
         self.file = self.source / "name.txt"
-        self.file.write_text("Azahar\n")
+        # These are Git patch fixtures: use exact LF bytes even on Windows.
+        # Text-mode writes translate LF to CRLF on that platform.
+        self.file.write_bytes(b"Azahar\n")
         self.git("add", ".")
         self.git("-c", "user.name=Test", "-c", "user.email=test@example.invalid",
                  "commit", "-qm", "Fixture")
         self.commit = self.git("rev-parse", "HEAD").decode().strip()
-        self.file.write_text("Denimulator3\n")
+        self.file.write_bytes(b"Denimulator3\n")
         self.patch = Path(self.temp.name) / "branding.patch"
         self.patch.write_bytes(self.git("diff", "--binary"))
         self.git("restore", "name.txt")
@@ -44,7 +46,7 @@ class PrepareTests(unittest.TestCase):
         self.assertEqual(self.file.read_text(), "Denimulator3\n")
 
     def test_foreign_changes_preserved(self):
-        self.file.write_text("User changes\n")
+        self.file.write_bytes(b"User changes\n")
         with self.assertRaisesRegex(RuntimeError, "other local changes"):
             prepare.apply_branding(self.source)
         self.assertEqual(self.file.read_text(), "User changes\n")
@@ -63,7 +65,7 @@ class PrepareTests(unittest.TestCase):
 
     def test_untracked_file_preserved(self):
         extra = self.source / "notes.txt"
-        extra.write_text("Keep me\n")
+        extra.write_bytes(b"Keep me\n")
         prepare.apply_branding(self.source)
         self.assertEqual(extra.read_text(), "Keep me\n")
 
