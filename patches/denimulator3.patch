@@ -1,0 +1,109 @@
+diff --git a/src/citra_meta/CMakeLists.txt b/src/citra_meta/CMakeLists.txt
+index 182423a..de191f8 100644
+--- a/src/citra_meta/CMakeLists.txt
++++ b/src/citra_meta/CMakeLists.txt
+@@ -4,7 +4,7 @@ add_executable(citra_meta
+     precompiled_headers.h
+ )
+ 
+-set_target_properties(citra_meta PROPERTIES OUTPUT_NAME "azahar")
++set_target_properties(citra_meta PROPERTIES OUTPUT_NAME "Denimulator3")
+ 
+ if (APPLE)
+     set(DIST_DIR "../../dist/apple")
+diff --git a/src/citra_qt/aboutdialog.ui b/src/citra_qt/aboutdialog.ui
+index f85e7d2..caff623 100644
+--- a/src/citra_qt/aboutdialog.ui
++++ b/src/citra_qt/aboutdialog.ui
+@@ -11,7 +11,7 @@
+    </rect>
+   </property>
+   <property name="windowTitle">
+-   <string>About Azahar</string>
++   <string>About Denimulator3</string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
+@@ -57,7 +57,7 @@
+           </sizepolicy>
+          </property>
+          <property name="text">
+-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:28pt;&quot;&gt;Azahar&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
++          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:28pt;&quot;&gt;Denimulator3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+@@ -87,7 +87,7 @@
+ &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+ p, li { white-space: pre-wrap; }
+ &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt;&quot;&gt;Azahar is a free and open source 3DS emulator licensed under GPLv2.0 or any later version.&lt;/span&gt;&lt;/p&gt;
++&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt;&quot;&gt;Denimulator3 is based on Azahar and Citra, a free and open source 3DS emulator licensed under GPLv2.0 or any later version.&lt;/span&gt;&lt;/p&gt;
+ &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+ &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt;&quot;&gt;This software should not be used to play games you have not legally obtained.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+diff --git a/src/citra_qt/citra_qt.cpp b/src/citra_qt/citra_qt.cpp
+index 523c3a3..b7cb9fd 100644
+--- a/src/citra_qt/citra_qt.cpp
++++ b/src/citra_qt/citra_qt.cpp
+@@ -3956,12 +3956,12 @@ void GMainWindow::UpdateWindowTitle() {
+     const QString full_name = QString::fromUtf8(Common::g_build_fullname);
+ 
+     if (game_title.isEmpty()) {
+-        setWindowTitle(QStringLiteral("Azahar %1").arg(full_name));
++        setWindowTitle(QStringLiteral("Denimulator3 %1").arg(full_name));
+     } else {
+-        setWindowTitle(QStringLiteral("Azahar %1 | %2").arg(full_name, game_title));
++        setWindowTitle(QStringLiteral("Denimulator3 %1 | %2").arg(full_name, game_title));
+         render_window->setWindowTitle(
+-            QStringLiteral("Azahar %1 | %2 | %3").arg(full_name, game_title, tr("Primary Window")));
+-        secondary_window->setWindowTitle(QStringLiteral("Azahar %1 | %2 | %3")
++            QStringLiteral("Denimulator3 %1 | %2 | %3").arg(full_name, game_title, tr("Primary Window")));
++        secondary_window->setWindowTitle(QStringLiteral("Denimulator3 %1 | %2 | %3")
+                                              .arg(full_name, game_title, tr("Secondary Window")));
+     }
+ }
+@@ -4128,7 +4128,7 @@ void LaunchQtFrontend(int argc, char* argv[]) {
+     // Init settings params
+     QCoreApplication::setOrganizationName(QStringLiteral("Azahar Developers"));
+     QCoreApplication::setOrganizationDomain(QStringLiteral("azahar_emu.org"));
+-    QCoreApplication::setApplicationName(QStringLiteral("Azahar"));
++    QCoreApplication::setApplicationName(QStringLiteral("Denimulator3"));
+     QGuiApplication::setDesktopFileName(QStringLiteral("org.azahar_emu.Azahar"));
+ 
+     auto rounding_policy = GetHighDpiRoundingPolicy();
+diff --git a/src/citra_qt/main.ui b/src/citra_qt/main.ui
+index acca536..4436df7 100644
+--- a/src/citra_qt/main.ui
++++ b/src/citra_qt/main.ui
+@@ -11,7 +11,7 @@
+    </rect>
+   </property>
+   <property name="windowTitle">
+-   <string>Azahar</string>
++   <string>Denimulator3</string>
+   </property>
+   <property name="windowIcon">
+    <iconset>
+@@ -329,7 +329,7 @@
+   </action>
+   <action name="action_About">
+    <property name="text">
+-    <string>About Azahar</string>
++    <string>About Denimulator3</string>
+    </property>
+    <property name="menuRole">
+     <enum>QAction::AboutRole</enum>
+diff --git a/src/common/common_paths.h b/src/common/common_paths.h
+index bb73c04..7891aa9 100644
+--- a/src/common/common_paths.h
++++ b/src/common/common_paths.h
+@@ -23,7 +23,7 @@
+ #define EMU_DATA_DIR USER_DIR
+ #else
+ #ifdef _WIN32
+-#define EMU_DATA_DIR "Azahar"
++#define EMU_DATA_DIR "Denimulator3"
+ #define LEGACY_CITRA_DATA_DIR "Citra"
+ #define LEGACY_LIME3DS_DATA_DIR "Lime3DS"
+ #elif defined(__APPLE__)
